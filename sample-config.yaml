@@ -1,0 +1,18 @@
+business:
+  name: My business
+  address: My address
+  email: My email
+
+client:
+  name: "My client"
+  address: "Client's address"
+
+invoice:
+  number: "INV-0001"
+  date: "2025-01-27"
+  due_date: "2025-02-26"
+  notes: |
+    Payment is due via bank transfer within 30 days.
+    ACH: #
+
+output: "invoice.html"
