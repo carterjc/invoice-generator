@@ -15,4 +15,4 @@ invoice:
     Payment is due via bank transfer within 30 days.
     ACH: #
 
-output: "invoice.html"
+output: "invoice"

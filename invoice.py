@@ -84,7 +84,7 @@ def load_config(config_path: str) -> Config:
         raise ValueError(f"Invalid type in config: {e}")
 
 
-def render_invoice(config: Config):
+def render_invoice(config: Config, pdf: bool = False):
     """Render HTML invoice using Jinja2 template"""
     env = Environment(loader=FileSystemLoader("."))
     template = env.get_template("templates/template.html")
@@ -104,10 +104,12 @@ def render_invoice(config: Config):
         items=config.items,
     )
 
-    with open(config.output or "invoice.html", "w") as f:
+    with open(f"{config.output}.html" or "invoice.html", "w") as f:
         f.write(rendered)
 
-    print(f"Invoice generated successfully: {config.output}")
+    print(
+        f"Invoice generated successfully: {config.output}{'.{html, pdf}' if pdf else '.html'}"
+    )
 
 
 if __name__ == "__main__":
@@ -118,8 +120,15 @@ if __name__ == "__main__":
     parser.add_argument("filename", help="Path to the Excel file")
     parser.add_argument(
         "--config",
+        type=str,
         help="Path to YAML config file (default: config.yaml)",
         default="config.yaml",
+    )
+    parser.add_argument(
+        "--pdf",
+        action="store_true",
+        help="Whether to export the invoice as a PDF.",
+        default="False",
     )
     args = parser.parse_args()
 
@@ -141,6 +150,6 @@ if __name__ == "__main__":
         total = sum((item.amount for item in config.items))
         config.invoice.subtotal = total
         config.invoice.total = total
-        render_invoice(config)
+        render_invoice(config, args.pdf)
     except ValueError as e:
         print(f"Error loading config: {e}")

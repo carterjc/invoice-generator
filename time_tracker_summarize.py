@@ -76,8 +76,8 @@ def summarize_hours_by_week(sheet_name: str, filename: str) -> List[Entry]:
                 entries.append(
                     {
                         "date": current_date,
-                        "hours": float(hours_cell.value),
-                        "description": desc_cell.value.strip(),
+                        "hours": float(hours_cell.value),  # type: ignore
+                        "description": desc_cell.value.strip(),  # type: ignore
                     }
                 )
 
