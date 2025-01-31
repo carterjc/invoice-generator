@@ -1,0 +1,163 @@
+<!-- template.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Invoice {{ invoice.number }}</title>
+    <link rel="stylesheet" href="templates/1.css" />
+    <link rel="stylesheet" href="templates/2.css" />
+  </head>
+  <body>
+    <div id="invoice-page" class="a4 shadow-lg text-black flex flex-col gap-8">
+      <!-- Header Section -->
+      <div class="grid grid-cols-5 gap-4">
+        <div class="col-span-4">
+          <div class="font-semibold text-sm">
+            <input class="w-full" value="{{ business.name }}" readonly />
+          </div>
+          <div class="font-normal text-sm">
+            <p class="w-full resize-none" readonly>
+              {{ business.address  | replace("\n", "<br/>") }}
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="font-normal text-sm">
+            <input
+              class="font-semibold text-sm uppercase tracking-wider"
+              value="INVOICE #"
+              readonly
+            />
+            <input class="w-full" value="{{ invoice.number }}" readonly />
+          </div>
+          <div class="font-normal text-sm">
+            <input
+              class="font-semibold text-sm uppercase tracking-wider"
+              value="DATE"
+              readonly
+            />
+            <input class="w-full" value="{{ invoice.date }}" readonly />
+          </div>
+        </div>
+      </div>
+      <div class="border-b border-gray-300"></div>
+
+      <!-- Client Details -->
+      <div class="grid grid-cols-4">
+        <div class="col-span-3">
+          <div class="font-semibold text-2xl">
+            <input class="w-full" value="INVOICE" readonly />
+          </div>
+          <div class="font-normal text-sm">
+            <p class="w-full resize-none" readonly>
+              {{ client.name }}
+              <br />
+              {{ client.address }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invoice Items -->
+      <div>
+        <div class="border-y border-gray-300 grid grid-cols-8 py-2 gap-2">
+          <span
+            class="col-span-5 uppercase tracking-wider font-semibold text-sm"
+            >Item</span
+          >
+          <span
+            class="col-span-1 uppercase tracking-wider font-semibold text-sm"
+            >Qty</span
+          >
+          <span
+            class="col-span-1 uppercase tracking-wider font-semibold text-sm"
+            >Price</span
+          >
+          <span
+            class="col-span-1 uppercase tracking-wider font-semibold text-sm"
+            >Amount</span
+          >
+        </div>
+        <div>
+          {% for item in items %}
+          <div
+            class="relative border-b border-gray-300 grid grid-cols-8 py-2 group gap-2"
+          >
+            <div class="col-span-5">
+              <div class="font-normal text-sm">
+                <input class="w-full" value="{{ item.period }}" readonly />
+              </div>
+              <div class="font-light text-sm">
+                <p class="w-full resize-none" rows="1" readonly>
+                  {{ item.description }}
+                </p>
+              </div>
+            </div>
+            <div class="col-span-1 flex items-center">
+              <input
+                class="w-full"
+                value="{{ item.quantity }}"
+                type="number"
+                readonly
+              />
+            </div>
+            <div class="col-span-1 flex items-center">
+              <input class="w-full" value="{{ "%.2f"|format(item.rate) }}"
+              type="number" readonly>
+            </div>
+            <div class="col-span-1 flex items-center">
+              <span class="font-normal text-sm"
+                >${{ "%.2f"|format(item.rate * item.quantity) }}</span
+              >
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Totals -->
+        <div class="grid grid-cols-8 mt-4">
+          <div class="col-span-5"></div>
+          <div class="col-span-1">
+            <span class="font-semibold text-sm uppercase tracking-wider"
+              >Subtotal</span
+            >
+          </div>
+          <div class="col-span-1"></div>
+          <div class="col-span-1">
+            <span class="font-semibold text-sm"
+              >${{ "%.2f"|format(invoice.subtotal) }}</span
+            >
+          </div>
+        </div>
+        <div class="grid grid-cols-8 mt-4">
+          <div class="col-span-5"></div>
+          <div class="col-span-1">
+            <span class="font-semibold text-sm uppercase tracking-wider"
+              >Total</span
+            >
+          </div>
+          <div class="col-span-1"></div>
+          <div class="col-span-1">
+            <span class="font-semibold text-sm"
+              >${{ "%.2f"|format(invoice.total) }}</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes Section -->
+      <div class="border-t border-gray-300">
+        <div class="font-normal text-sm mt-2">
+          <input
+            class="font-semibold text-sm uppercase tracking-wider"
+            value="NOTES"
+            readonly
+          />
+          <p class="w-full resize-none" rows="4" readonly>
+            {{ invoice.notes | replace("\n", "<br/>") }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
